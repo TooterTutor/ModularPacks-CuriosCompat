@@ -1,6 +1,5 @@
 package io.github.tootertutor.modularpacks_curioscompat.listeners;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,6 +10,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import io.github.tootertutor.ModularPacks.api.ModularPacksAPI;
 import io.github.tootertutor.ModularPacks.item.Keys;
+import io.github.tootertutor.modularpacks_curioscompat.CuriosCompatPlugin;
 import io.github.tootertutor.modularpacks_curioscompat.compat.CuriosCompatImpl;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -29,7 +29,8 @@ public class BackpackClickListener implements Listener {
             if (backpackType != null) {
                 CuriosCompatImpl.tagBackpackDynamic(cursor, backpackType);
                 player.sendActionBar(Component.text("Backpack ready for Curios slot", NamedTextColor.GOLD));
-                Bukkit.getLogger().info("[ModularPacks-CuriosCompat] Tagged cursor backpack: " + backpackType);
+                CuriosCompatPlugin.getInstance().getLogger()
+                        .info("[ModularPacks-CuriosCompat] Tagged cursor backpack: " + backpackType);
             }
         }
 
@@ -39,7 +40,8 @@ public class BackpackClickListener implements Listener {
             if (backpackType != null) {
                 CuriosCompatImpl.tagBackpackDynamic(current, backpackType);
                 player.sendActionBar(Component.text("Backpack ready for Curios slot", NamedTextColor.GOLD));
-                Bukkit.getLogger().info("[ModularPacks-CuriosCompat] Tagged current backpack: " + backpackType);
+                CuriosCompatPlugin.getInstance().getLogger()
+                        .info("[ModularPacks-CuriosCompat] Tagged current backpack: " + backpackType);
             }
         }
     }

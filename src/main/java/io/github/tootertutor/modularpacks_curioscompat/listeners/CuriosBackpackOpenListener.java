@@ -28,9 +28,11 @@ import org.bukkit.persistence.PersistentDataType;
 
 import io.github.tootertutor.ModularPacks.api.ModularPacksAPI;
 import io.github.tootertutor.ModularPacks.item.Keys;
+import io.github.tootertutor.modularpacks_curioscompat.CuriosCompatPlugin;
 import io.github.tootertutor.modularpacks_curioscompat.compat.CuriosCompatImpl;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 
 /**
  * Listener for managing backpack interactions through the Curios slot.
@@ -149,7 +151,8 @@ public class CuriosBackpackOpenListener implements Listener {
             return;
         }
 
-        Bukkit.getLogger().info("[ModularPacks-CuriosCompat] Shift+right-click detected, opening equipped backpack...");
+        CuriosCompatPlugin.getInstance().getLogger()
+                .info("Shift+right-click detected, opening equipped backpack...");
         openEquippedBackpack(player);
         event.setCancelled(true);
     }
@@ -202,7 +205,7 @@ public class CuriosBackpackOpenListener implements Listener {
             ModularPacksAPI modularPacksAPI = ModularPacksAPI.getInstance();
 
             if (curiosAPI == null || modularPacksAPI == null) {
-                Bukkit.getLogger().warning("[ModularPacks-CuriosCompat] APIs are null");
+                CuriosCompatPlugin.getInstance().getLogger().warning("APIs are null");
                 return;
             }
 
@@ -223,7 +226,8 @@ public class CuriosBackpackOpenListener implements Listener {
             }
 
         } catch (Exception e) {
-            Bukkit.getLogger().severe("[ModularPacks-CuriosCompat] Error opening backpack: " + e.getMessage());
+            CuriosCompatPlugin.getInstance().getLogger()
+                    .severe("Error opening backpack: " + e.getMessage());
             e.printStackTrace();
             player.sendMessage(Component.text("Error opening backpack: " + e.getMessage(), NamedTextColor.RED));
         }
@@ -239,7 +243,7 @@ public class CuriosBackpackOpenListener implements Listener {
      */
     private List<ItemStack> getValidEquippedBackpacks(Player player, CuriosPaperAPI curiosAPI) {
         List<ItemStack> equippedItems = curiosAPI.getEquippedItems(player, CURIOS_BACK_SLOT);
-        Bukkit.getLogger().info("[ModularPacks-CuriosCompat] Found "
+        CuriosCompatPlugin.getInstance().getLogger().info("Found "
                 + (equippedItems != null ? equippedItems.size() : 0) + " equipped items");
 
         if (equippedItems == null || equippedItems.isEmpty()) {
@@ -256,8 +260,8 @@ public class CuriosBackpackOpenListener implements Listener {
             }
         }
 
-        Bukkit.getLogger()
-                .info("[ModularPacks-CuriosCompat] Found " + backpacksWithId.size() + " backpacks with valid IDs");
+        CuriosCompatPlugin.getInstance().getLogger()
+                .info("Found " + backpacksWithId.size() + " backpacks with valid IDs");
         return backpacksWithId;
     }
 
@@ -280,17 +284,19 @@ public class CuriosBackpackOpenListener implements Listener {
             }
 
             UUID backpackUUID = UUID.fromString(backpackId);
-            Bukkit.getLogger().info(
-                    "[ModularPacks-CuriosCompat] Opening backpack: id=" + backpackId + ", type=" + backpackType);
+            CuriosCompatPlugin.getInstance().getLogger().info(
+                    "Opening backpack: id=" + backpackId + ", type=" + backpackType);
 
             api.getPlugin().getBackpackMenuRenderer().openMenu(player, backpackUUID, backpackType);
 
         } catch (IllegalArgumentException e) {
             player.sendMessage(Component.text("Error opening backpack: Invalid backpack ID", NamedTextColor.RED));
-            Bukkit.getLogger().warning("[ModularPacks-CuriosCompat] Invalid backpack ID format: " + e.getMessage());
+            CuriosCompatPlugin.getInstance().getLogger()
+                    .warning("Invalid backpack ID format: " + e.getMessage());
         } catch (Exception e) {
             player.sendMessage(Component.text("Error opening backpack: " + e.getMessage(), NamedTextColor.RED));
-            Bukkit.getLogger().warning("[ModularPacks-CuriosCompat] Error opening backpack: " + e.getMessage());
+            CuriosCompatPlugin.getInstance().getLogger()
+                    .warning("Error opening backpack: " + e.getMessage());
         }
     }
 
@@ -360,6 +366,7 @@ public class CuriosBackpackOpenListener implements Listener {
 
     /**
      * Creates a display arrow item with the given label.
+     * Uses ARROW for visibility and adds lore for clarity.
      * 
      * @param label the display name for the arrow
      * @return an ItemStack representing the arrow
@@ -368,7 +375,12 @@ public class CuriosBackpackOpenListener implements Listener {
         ItemStack arrow = new ItemStack(Material.ARROW);
         ItemMeta meta = arrow.getItemMeta();
         if (meta != null) {
-            meta.displayName(Component.text(label));
+            meta.displayName(Component.text(label)
+                    .color(NamedTextColor.GREEN)
+                    .decorate(TextDecoration.BOLD));
+            java.util.List<Component> lore = new java.util.ArrayList<>();
+            lore.add(Component.text("Click to navigate").color(NamedTextColor.GRAY));
+            meta.lore(lore);
             arrow.setItemMeta(meta);
         }
         return arrow;
@@ -419,7 +431,9 @@ public class CuriosBackpackOpenListener implements Listener {
         ModularPacksAPI api = ModularPacksAPI.getInstance();
         if (api != null) {
             openBackpack(player, backpackItem, api);
-            player.closeInventory();
+            // Note: Do NOT close the inventory - Bukkit automatically closes the current
+            // one
+            // when a new inventory is opened by openBackpack()
         }
     }
 

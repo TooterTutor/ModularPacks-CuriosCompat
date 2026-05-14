@@ -2,13 +2,13 @@ package io.github.tootertutor.modularpacks_curioscompat.compat;
 
 import org.bg52.curiospaper.CuriosPaper;
 import org.bg52.curiospaper.api.CuriosPaperAPI;
-import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import io.github.tootertutor.ModularPacks.config.BackpackTypeDef;
+import io.github.tootertutor.modularpacks_curioscompat.CuriosCompatPlugin;
 
 public class CuriosCompatImpl {
     private static CuriosPaperAPI curiosAPI;
@@ -23,18 +23,22 @@ public class CuriosCompatImpl {
             CuriosPaper curiosPaper = CuriosPaper.getInstance();
             if (curiosPaper != null) {
                 curiosAPI = curiosPaper.getCuriosPaperAPI();
-                Bukkit.getLogger().info("[ModularPacks-CuriosCompat] CuriosPaper API initialized");
+                CuriosCompatPlugin.getInstance().getLogger()
+                        .info("[ModularPacks-CuriosCompat] CuriosPaper API initialized");
             } else {
-                Bukkit.getLogger().warning("[ModularPacks-CuriosCompat] CuriosPaper instance is null");
+                CuriosCompatPlugin.getInstance().getLogger()
+                        .warning("[ModularPacks-CuriosCompat] CuriosPaper instance is null");
             }
         } catch (Exception e) {
-            Bukkit.getLogger().severe("[ModularPacks-CuriosCompat] Error initializing CuriosPaper: " + e.getMessage());
+            CuriosCompatPlugin.getInstance().getLogger()
+                    .severe("[ModularPacks-CuriosCompat] Error initializing CuriosPaper: " + e.getMessage());
         }
     }
 
     public static void registerBackpackType(BackpackTypeDef backpackType) {
         if (curiosAPI == null || backpackType == null) {
-            Bukkit.getLogger().warning("[ModularPacks-CuriosCompat] Cannot register backpack type - curiosAPI is null or backpackType is null");
+            CuriosCompatPlugin.getInstance().getLogger().warning(
+                    "[ModularPacks-CuriosCompat] Cannot register backpack type - curiosAPI is null or backpackType is null");
             return;
         }
 
@@ -45,7 +49,8 @@ public class CuriosCompatImpl {
                 slotRegistered = true;
             }
         } catch (Exception e) {
-            Bukkit.getLogger().severe("[ModularPacks-CuriosCompat] Error registering backpack type: " + e.getMessage());
+            CuriosCompatPlugin.getInstance().getLogger()
+                    .severe("[ModularPacks-CuriosCompat] Error registering backpack type: " + e.getMessage());
         }
     }
 
@@ -53,7 +58,9 @@ public class CuriosCompatImpl {
         try {
             Integer customModelData = backpackType.customModelData() > 0 ? backpackType.customModelData() : null;
 
-            Bukkit.getLogger().info("[ModularPacks-CuriosCompat] Registering backpack slot with material: " + backpackType.outputMaterial());
+            CuriosCompatPlugin.getInstance().getLogger()
+                    .info("[ModularPacks-CuriosCompat] Registering backpack slot with material: "
+                            + backpackType.outputMaterial());
 
             curiosAPI.registerSlot(
                     "back",
@@ -64,9 +71,11 @@ public class CuriosCompatImpl {
                     1,
                     backpackType.lore());
 
-            Bukkit.getLogger().info("[ModularPacks-CuriosCompat] Successfully registered backpack slot");
+            CuriosCompatPlugin.getInstance().getLogger()
+                    .info("[ModularPacks-CuriosCompat] Successfully registered backpack slot");
         } catch (Exception e) {
-            Bukkit.getLogger().severe("[ModularPacks-CuriosCompat] Error registering slot: " + e.getMessage());
+            CuriosCompatPlugin.getInstance().getLogger()
+                    .severe("[ModularPacks-CuriosCompat] Error registering slot: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -84,9 +93,11 @@ public class CuriosCompatImpl {
             meta.getPersistentDataContainer().set(CURIOS_SLOT_TAG, PersistentDataType.STRING, "back");
 
             item.setItemMeta(meta);
-            Bukkit.getLogger().info("[ModularPacks-CuriosCompat] Successfully tagged item with curios NBT");
+            CuriosCompatPlugin.getInstance().getLogger()
+                    .info("[ModularPacks-CuriosCompat] Successfully tagged item with curios NBT");
         } catch (Exception e) {
-            Bukkit.getLogger().warning("[ModularPacks-CuriosCompat] Error tagging backpack: " + e.getMessage());
+            CuriosCompatPlugin.getInstance().getLogger()
+                    .warning("[ModularPacks-CuriosCompat] Error tagging backpack: " + e.getMessage());
         }
 
         return item;
@@ -103,7 +114,8 @@ public class CuriosCompatImpl {
             meta.getPersistentDataContainer().remove(CURIOS_SLOT_TAG);
             item.setItemMeta(meta);
         } catch (Exception e) {
-            Bukkit.getLogger().warning("[ModularPacks-CuriosCompat] Error removing curios tags: " + e.getMessage());
+            CuriosCompatPlugin.getInstance().getLogger()
+                    .warning("[ModularPacks-CuriosCompat] Error removing curios tags: " + e.getMessage());
         }
     }
 
