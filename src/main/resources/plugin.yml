@@ -1,7 +1,7 @@
 name: ModularPacks-CuriosCompat
 version: "${version}"
 main: io.github.tootertutor.modularpacks_curioscompat.CuriosCompatPlugin
-api-version: "1.21"
+api: "1.21"
 depend:
   - ModularPacks
   - CuriosPaper
