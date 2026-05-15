@@ -6,7 +6,8 @@ on:
       - "*.*" # Trigger on any version tag (e.g., 1.9, 2.0, 1.9.1)
 
 permissions:
-  contents: write
+  contents: read
+  packages: read
 
 jobs:
   build-and-release:
@@ -24,6 +25,9 @@ jobs:
           java-version: "21"
           distribution: "temurin"
           cache: maven
+          server-id: github
+          server-username: GITHUB_ACTOR
+          server-password: GITHUB_TOKEN
 
       - name: Get version from tag
         id: get_version
@@ -34,6 +38,8 @@ jobs:
 
       - name: Build with Maven
         run: mvn -B -U clean package --file pom.xml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate Changelog
         id: changelog
