@@ -6,7 +6,7 @@ on:
       - "*.*" # Trigger on any version tag (e.g., 1.9, 2.0, 1.9.1)
 
 permissions:
-  contents: read
+  contents: write
   packages: read
 
 jobs:
