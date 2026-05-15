@@ -74,6 +74,10 @@
 
     <repositories>
         <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/tootertutor/ModularPacks</url>
+        </repository>
+        <repository>
             <id>papermc-repo</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
